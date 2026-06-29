@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeSim — Stock & Options Trading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-icon">◈</span>
+        <span class="brand-name">TradeSim</span>
+      </div>
+
+      <div class="mode-selector">
+        <span class="label">Market Mode</span>
+        <div class="mode-buttons">
+          <button class="mode-btn" data-mode="bull"><span class="mode-dot"></span>Bull</button>
+          <button class="mode-btn active" data-mode="neutral"><span class="mode-dot"></span>Neutral</button>
+          <button class="mode-btn" data-mode="bear"><span class="mode-dot"></span>Bear</button>
+        </div>
+      </div>
+
+      <div class="header-cash">
+        <span class="cash-label">Cash</span>
+        <span class="cash-value" id="header-cash">$1,000.00</span>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section class="left-column">
+        <div class="chart-panel">
+          <div class="chart-header">
+            <div>
+              <h2 class="ticker">SIMCO</h2>
+              <span class="ticker-sub">Simulated Corp · Live</span>
+            </div>
+            <div class="price-display">
+              <span class="current-price" id="current-price">$100.00</span>
+              <span class="price-change up" id="price-change">+0.00%</span>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="price-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="panel share-panel">
+          <h3 class="panel-title">Stock Trading</h3>
+          <div class="share-stats">
+            <div class="stat">
+              <span class="stat-label">Shares Held</span>
+              <span class="stat-value" id="shares-held">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Market Price</span>
+              <span class="stat-value" id="market-price">$100.00</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Position Value</span>
+              <span class="stat-value" id="position-value">$0.00</span>
+            </div>
+          </div>
+
+          <div class="trade-controls">
+            <div class="qty-input-group">
+              <label>Quantity</label>
+              <div class="qty-row">
+                <button class="qty-btn" id="qty-minus">−</button>
+                <input type="number" id="share-qty" min="1" value="1" />
+                <button class="qty-btn" id="qty-plus">+</button>
+              </div>
+              <div class="qty-presets">
+                <button data-qty="1">1</button>
+                <button data-qty="5">5</button>
+                <button data-qty="10">10</button>
+                <button data-qty="max">Max</button>
+              </div>
+            </div>
+            <div class="order-summary">
+              <span>Est. Cost</span>
+              <span id="est-cost">$100.00</span>
+            </div>
+            <div class="trade-buttons">
+              <button class="btn btn-buy" id="buy-shares">Buy 1 Share</button>
+              <button class="btn btn-sell" id="sell-shares" disabled>Sell 1 Share</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="center-column">
+        <div class="panel options-panel">
+          <div class="options-header">
+            <h3 class="panel-title">Options Chain</h3>
+            <div class="contracts-input">
+              <label>Contracts</label>
+              <input type="number" id="option-contracts" min="1" max="99" value="1" />
+              <span class="contracts-hint">Total = Ask × Contracts × 100</span>
+            </div>
+          </div>
+
+          <div class="expiry-tabs" id="expiry-tabs"></div>
+
+          <div class="option-type-tabs">
+            <button class="active call" data-type="call">Calls</button>
+            <button data-type="put">Puts</button>
+          </div>
+
+          <div class="spot-line">Spot: <strong id="spot-price">$100.00</strong></div>
+
+          <div class="orderbook" id="orderbook">
+            <div class="orderbook-header">
+              <span>Strike</span><span>Bid</span><span>Ask</span><span>B/E</span><span>Total</span><span>Exp</span><span></span><span></span>
+            </div>
+            <div class="orderbook-body" id="orderbook-body"></div>
+          </div>
+
+          <div class="open-options" id="open-options" hidden>
+            <h4>Open Positions</h4>
+            <div id="open-options-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="right-column">
+        <div class="panel portfolio-panel">
+          <div class="portfolio-header">
+            <h3 class="panel-title">Portfolio</h3>
+            <button class="btn-reset" id="reset-btn">Reset</button>
+          </div>
+
+          <div class="equity-display">
+            <span class="equity-label">Total Equity</span>
+            <span class="equity-value" id="total-equity">$1,000.00</span>
+            <span class="equity-pnl up" id="total-pnl">+$0.00 P&L</span>
+          </div>
+
+          <div class="portfolio-breakdown">
+            <div class="breakdown-row"><span>Cash</span><span id="breakdown-cash">$1,000.00</span></div>
+            <div class="breakdown-row"><span id="breakdown-shares-label">Shares (0)</span><span id="breakdown-shares">$0.00</span></div>
+            <div class="breakdown-row"><span>Options</span><span id="breakdown-options">$0.00</span></div>
+          </div>
+
+          <div class="trade-log">
+            <h4>Activity</h4>
+            <div class="log-list" id="log-list">
+              <div class="log-empty">No trades yet</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
