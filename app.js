@@ -96,7 +96,8 @@ function getStrikes(spot) {
 }
 
 function generateOrderBook(spot, mode, now) {
-  const strikes = getStrikes(spot)
+  const positionStrikes = state.options.map(p => p.strike)
+  const strikes = [...new Set([...getStrikes(spot), ...positionStrikes])].sort((a, b) => a - b)
   const vol = mode === 'bull' ? 0.22 : mode === 'bear' ? 0.28 : 0.25
   const calls = [], puts = []
 
